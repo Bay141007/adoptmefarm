@@ -10528,7 +10528,7 @@ __moduleSources["Services/Interface"] = function(...)
             end
         end
         local homeTab
-        if wide and type(Window.CreateHomeTab) == "function" then
+        if wide and not touch and type(Window.CreateHomeTab) == "function" then
             local okHome, result = pcall(function()
                 return Window:CreateHomeTab({
                     SupportedExecutors = Interface.SUPPORTED_EXECUTORS,

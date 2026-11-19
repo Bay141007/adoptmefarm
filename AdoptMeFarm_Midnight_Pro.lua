@@ -1,4 +1,4 @@
--- AdoptMe Farm  v3.0.86 | Adopt Victims v3 | settings: the window
+-- Midnight Hub  v3.0.86 | Adopt Me tools | settings: the window
 local UserConfig = {
     Farm = {
         Enabled = true, -- false = everything paused ("Pause all" in the window); each feature has its own switch
@@ -43,7 +43,7 @@ local UserConfig = {
         DisableMinutes = 15,
         Event = {
             GhostGallery = false,
-            Spotlight = true, -- Stitches' Spotlight rounds, joined by the game's own teleport prompt (Hauntlet > Ghost > Stitches)
+            Spotlight = false, -- expired Halloween event: disabled by default
             SpotlightSpeed = 90, -- studs/s in the round (60 - 120)
             SpotlightPickupRange = 20, -- candy corn this close is pulled in by the game (0 = go to every candy corn)
             WhereBear = false, -- Where Bear: candy in its rounds (after Hauntlet / Ghost / Stitches; before needs)
@@ -51,7 +51,7 @@ local UserConfig = {
             WhereBearSpeed = 65, -- "tween" / "walk": studs/s (16 - 120)
             WhereBearTpGap = 0.07, -- "tp": seconds between teleports (0.03 - 1)
             WhereBearAvoidBear = 28, -- candy this close to the bear is left (0 = off)
-            Shoebill = true, -- a Lost Sock / Headphones in your backpack is given at its Haunted Hotel Shoebill door
+            Shoebill = false, -- expired Halloween event: disabled by default
             Hauntlet = false,
             HauntletMove = "tween", -- how the bot reaches a door's circle: "tween" (smooth) | "walk" | "tp"
             HauntletMoveSeconds = 0.5, -- tween: seconds to reach the circle (0.1 - 5)
@@ -392,7 +392,7 @@ __moduleSources["Core/Config"] = function(...)
     local Config = {}
     Config.Defaults = {
         General = {
-            ScriptName = "Adopt Victims",
+            ScriptName = "Midnight Hub",
             TickSeconds = 0.5,
         },
         Farm = {
@@ -1025,6 +1025,20 @@ __moduleSources["Core/Config"] = function(...)
             overrides.Preset = nil
         end
         local config = merge(base, overrides, "", warnings)
+        -- Halloween 2026 has ended. Force its retired automation switches off even
+        -- when an older saved config still contains them; keep the keys for migration compatibility.
+        config.Farm.Event.GhostGallery = false
+        config.Farm.Event.Spotlight = false
+        config.Farm.Event.WhereBear = false
+        config.Farm.Event.Shoebill = false
+        config.Farm.Event.Hauntlet = false
+        config.Farm.Event.StrayCat = false
+        config.Farm.Event.StrayCatDragon = false
+        config.Farm.Event.Crypt = false
+        config.Farm.Event.PigeonNest = false
+        config.Farm.Event.AutoLever = false
+        config.Farm.Event.CandyPets.Enabled = false
+        config.Farm.Event.Quests = false
         config.Preset = presetId
         -- v2.1.11 (user: "Pick what to buy shows only 2 items"): the shop list is the script's catalog, not a setting:
         -- a list saved by an older version (2 pets) no longer hides the new entries (Skelicorn, Poltergeist Box)
@@ -1439,7 +1453,7 @@ __moduleSources["Services/Disclosure"] = function(...)
     local import = ...
     local Config = import("Core/Config")
     local Disclosure = {}
-    Disclosure.VERSION = "3.0.86 (Adopt Victims v3)"
+    Disclosure.VERSION = "3.0.86 (Midnight Hub v3)"
     Disclosure.WEBHOOK_FIELDS = {
         ["Player"] = "your Roblox username (only if Notifications.IncludeUsername = true)",
         ["Session time"] = "how long the script has been running",
@@ -3246,7 +3260,7 @@ __moduleSources["Services/Lang"] = function(...)
     add("Ghost Gallery round", "Hayalet Galerisi turu", "Ronda de la galería", "Rodada da galeria")
     add("Task resting", "Görev dinleniyor", "Tarea en pausa", "Tarefa em pausa")
     add("Stuck: going home", "Takıldı: eve gidiyor", "Atascado: a casa", "Travado: indo pra casa")
-    add("Made Adopt Victims: plain, readable Luau.", "Adopt Victims'ı yaptı: sade, okunabilir Luau.", "Creó Adopt Victims: Luau simple y legible.", "Criou o Adopt Victims: Luau simples e legível.")
+    add("Made Midnight Hub: plain, readable Luau.", "Midnight Hub'ı yaptı: sade, okunabilir Luau.", "Creó Midnight Hub: Luau simple y legible.", "Criou o Midnight Hub: Luau simples e legível.")
     add("Thank you for using it!", "Kullandığın için teşekkürler!", "¡Gracias por usarlo!", "Obrigado por usar!")
     add("Send each coin only on the network written next to it. Tokens sent on another network are lost.", "Her coini sadece yanında yazan ağdan gönder. Başka ağdan gönderilen tokenler kaybolur.", "Envía cada moneda solo por la red indicada. Los tokens en otra red se pierden.", "Envie cada moeda só pela rede indicada. Tokens em outra rede se perdem.")
     add("supported", "destekleniyor", "compatible", "compatível")
@@ -4259,7 +4273,7 @@ __moduleSources["Services/Lang"] = function(...)
         ["Ghost Gallery round"] = "Ghost-Gallery-Runde",
         ["Task resting"] = "Aufgabe pausiert",
         ["Stuck: going home"] = "Hängt: geht nach Hause",
-        ["Made Adopt Victims: plain, readable Luau."] = "Adopt Victims gemacht: schlichtes, lesbares Luau.",
+        ["Made Midnight Hub: plain, readable Luau."] = "Midnight Hub gemacht: schlichtes, lesbares Luau.",
         ["Thank you for using it!"] = "Danke fürs Benutzen!",
         ["Send each coin only on the network written next to it. Tokens sent on another network are lost."] = "Sende jede Münze nur über das daneben stehende Netzwerk. Über ein anderes Netzwerk gesendete Tokens sind verloren.",
         ["supported"] = "unterstützt",
@@ -4901,7 +4915,7 @@ __moduleSources["Services/Lang"] = function(...)
         ["Ghost Gallery round"] = "Manche de Ghost Gallery",
         ["Task resting"] = "Tâche en pause",
         ["Stuck: going home"] = "Bloqué : rentre à la maison",
-        ["Made Adopt Victims: plain, readable Luau."] = "Fait par Adopt Victims : Luau simple et lisible.",
+        ["Made Midnight Hub: plain, readable Luau."] = "Fait par Midnight Hub : Luau simple et lisible.",
         ["Thank you for using it!"] = "Merci de l'utiliser !",
         ["Send each coin only on the network written next to it. Tokens sent on another network are lost."] = "Envoie chaque crypto seulement sur le réseau écrit à côté. Les jetons envoyés sur un autre réseau sont perdus.",
         ["supported"] = "pris en charge",
@@ -5543,7 +5557,7 @@ __moduleSources["Services/Lang"] = function(...)
         ["Ghost Gallery round"] = "Раунд Ghost Gallery",
         ["Task resting"] = "Задача отдыхает",
         ["Stuck: going home"] = "Застрял: иду домой",
-        ["Made Adopt Victims: plain, readable Luau."] = "Сделал Adopt Victims: простой, читаемый Luau.",
+        ["Made Midnight Hub: plain, readable Luau."] = "Сделал Midnight Hub: простой, читаемый Luau.",
         ["Thank you for using it!"] = "Спасибо, что пользуешься!",
         ["Send each coin only on the network written next to it. Tokens sent on another network are lost."] = "Отправляй каждую монету только в сети, указанной рядом. Токены в другой сети пропадут.",
         ["supported"] = "поддерживается",
@@ -6185,7 +6199,7 @@ __moduleSources["Services/Lang"] = function(...)
         ["Ghost Gallery round"] = "Ronde Ghost Gallery",
         ["Task resting"] = "Tugas istirahat",
         ["Stuck: going home"] = "Macet: pulang",
-        ["Made Adopt Victims: plain, readable Luau."] = "Dibuat Adopt Victims: Luau sederhana dan mudah dibaca.",
+        ["Made Midnight Hub: plain, readable Luau."] = "Dibuat Midnight Hub: Luau sederhana dan mudah dibaca.",
         ["Thank you for using it!"] = "Terima kasih sudah memakainya!",
         ["Send each coin only on the network written next to it. Tokens sent on another network are lost."] = "Kirim tiap koin hanya di jaringan yang tertulis di sampingnya. Token yang dikirim di jaringan lain akan hilang.",
         ["supported"] = "didukung",
@@ -6827,7 +6841,7 @@ __moduleSources["Services/Lang"] = function(...)
         ["Ghost Gallery round"] = "Vòng Ghost Gallery",
         ["Task resting"] = "Việc đang nghỉ",
         ["Stuck: going home"] = "Bị kẹt: đang về nhà",
-        ["Made Adopt Victims: plain, readable Luau."] = "Làm bởi Adopt Victims: Luau đơn giản, dễ đọc.",
+        ["Made Midnight Hub: plain, readable Luau."] = "Làm bởi Midnight Hub: Luau đơn giản, dễ đọc.",
         ["Thank you for using it!"] = "Cảm ơn bạn đã dùng!",
         ["Send each coin only on the network written next to it. Tokens sent on another network are lost."] = "Chỉ gửi mỗi đồng coin qua mạng ghi bên cạnh. Token gửi qua mạng khác sẽ bị mất.",
         ["supported"] = "được hỗ trợ",
@@ -7204,8 +7218,8 @@ __moduleSources["Services/Interface"] = function(...)
     local Lang = import("Services/Lang")
     local T = Lang.t
     local Interface = {}
-    Interface.TITLE = "Adopt Victims"
-    Interface.EDITION = "v3"
+    Interface.TITLE = "Midnight Hub"
+    Interface.EDITION = "Adopt Me Tools • v3"
     Interface.LIBRARY_URL = "https://raw.nebulasoftworks.xyz/starlight"
     Interface.DISCORD_INVITE = "7vvwEY37YX"
     Interface.DONATION_LINKS = {
@@ -7467,7 +7481,7 @@ __moduleSources["Services/Interface"] = function(...)
     end
     -- v3.0.77: the Dashboard card shows the same thing as Support > What's new (this version + the last update)
     Interface.CHANGELOG_LATEST = {
-        Title = "Adopt Victims " .. Interface.WHATS_NEW[1][1],
+        Title = "Midnight Hub " .. Interface.WHATS_NEW[1][1],
         Date = Interface.LAST_UPDATE,
         Description = table.concat(Interface.WHATS_NEW[1][3], " • "),
     }
@@ -10706,37 +10720,35 @@ __moduleSources["Services/Interface"] = function(...)
             "4 full grown pets of one kind -> 1 neon")
         bindToggle(growthBox, "autoMega", "sparkles", "Make mega neon pets", { "Farm", "AutoNeon", "Mega" },
             "4 full grown neons of one kind -> 1 mega neon")
-        local eventTab = track(farmSection:CreateTab({ Name = "Event", Icon = I("ghost"), Columns = columns }, "event"))
-        local halloweenBox = eventTab:CreateGroupbox({ Name = "Minigames", Icon = I("ghost"), Column = 1 }, "halloween")
-        bindToggle(halloweenBox, "ghostOn", "crosshair", "Ghost Gallery", { "Farm", "Event", "GhostGallery" },
-            "Joins every round and vacuums the ghosts (Rusty Keys)")
-        bindToggle(halloweenBox, "hauntlet", "key-round", "Hauntlet", { "Farm", "Event", "Hauntlet" },
-            "Joins every run and picks the safer doors (a run always comes before a Ghost Gallery round)")
-        bindToggle(halloweenBox, "spotlight", "item:halloween_2026_stitches|tent", "Stitches' Spotlight", { "Farm", "Event", "Spotlight" },
-            "Joins each round by the game's teleport prompt and collects candy corn")
-        bindToggle(halloweenBox, "whereBear", "game:candy|footprints", "Where Bear", { "Farm", "Event", "WhereBear" },
-            "Joins at the Manor door and collects candy in its rounds (after Hauntlet / Ghost / Stitches; needs wait)")
-        -- v3.0.76: the Spotlight sliders are in Minigame options; the order is in the tooltips (Hauntlet > Ghost > Stitches)
-        local cryptBox = eventTab:CreateGroupbox({ Name = "Halloween world", Icon = I("item:halloween_2026_tomb_spider|skull"),
-            Column = 1 }, "crypt")
-        bindToggle(cryptBox, "cat", "cat", "Feed the Stray Cat", { "Farm", "Event", "StrayCat" },
-            "1 water to the Stray Cat once a day (candy)")
-        bindToggle(cryptBox, "catDragon", "sparkles", "Auto Stray Cat Dragon", { "Farm", "Event", "StrayCatDragon" },
-            "Rusty Key on the Crypt's cat food grave, then the Polymorphing Cat Food to the Stray Cat (unlocks the Dragon; pick it in the Candy Shop to buy it)")
-        bindToggle(cryptBox, "crypt", "item:halloween_2026_rusty_key|key-round", "Use Rusty Keys", { "Farm", "Event", "Crypt" },
-            "Opens Crypt graves with your Rusty Keys; pick below what to open")
-        bindPick(cryptBox, "cryptOpen", "item:halloween_2026_rusty_key|key-round", "Open", { "Farm", "Event", "CryptOpen" }, Interface.CRYPT_NAMES,
-            { multi = true, placeholder = "Next floor (Mummy Spider)", tooltip = "What a Rusty Key opens, in this order" })
-        bindToggle(cryptBox, "nest", "item:halloween_2026_twig|bird", "Give twigs to the nest", { "Farm", "Event", "PigeonNest" },
-            "Has a Crypt Twig: takes it to the Hotel nest")
-        bindToggle(cryptBox, "lever", "zap", "Auto lever (at the machine)", { "Farm", "Event", "AutoLever" },
-            "Lightning Lever in your backpack or not pulled: goes to the machine by the Manor, puts it in and pulls it there")
-        bindToggle(cryptBox, "shoebill", "item:halloween_2026_lost_socks|footprints", "Shoebill (Lost Sock + Headphones)", { "Farm", "Event", "Shoebill" },
-            "Gives your Lost Socks and Headphones at the Shoebill doors (Haunted Hotel)")
-        bindToggle(cryptBox, "quests", "scroll-text", "Claim quests", { "Farm", "Event", "Quests" },
-            "Claims finished quests and board rewards; visits homes when a quest asks for it")
-        -- v3.0.76: the Pet Pen in its own small box (the Halloween world box was too long)
-        local penBox = eventTab:CreateGroupbox({ Name = "Pet Pen", Icon = I("fence"), Column = col(2) }, "pen")
+        local eventTab = track(farmSection:CreateTab({ Name = "Updates", Icon = I("sparkles"), Columns = columns }, "event"))
+        -- Current Adopt Me update information (19 Nov 2026). Expired Halloween controls are hidden;
+        -- the underlying legacy code and config paths are retained for compatibility.
+        local updateBox = eventTab:CreateGroupbox({ Name = "Latest update • Quality of Life", Icon = I("sparkles"), Column = 1 }, "latestUpdate")
+        updateBox:CreateParagraph({
+            Name = "What's new",
+            Icon = I("info"),
+            Content = "Adopt Me's 19 November Quality-of-Life update adds pet profile poses, a clear-all-stickers button, marketplace emotes, and restored classic non-animated faces."
+        }, "qolSummary")
+        local customBox = eventTab:CreateGroupbox({ Name = "Pet & profile customisation", Icon = I("paw-print"), Column = 1 }, "customisation")
+        customBox:CreateParagraph({
+            Name = "New paints and journal details",
+            Icon = I("palette"),
+            Content = "25 new Pet Paints and 7 new Mega Neon Paints are available. Pet Paints cost 500–5,000 Bucks; Mega Neon Paints cost 49 Robux each. The Journal now shows how many of each pet you've owned."
+        }, "petPaints")
+        local buildBox = eventTab:CreateGroupbox({ Name = "Building improvements", Icon = I("house"), Column = col(2) }, "buildingUpdate")
+        buildBox:CreateParagraph({
+            Name = "New building tools",
+            Icon = I("wrench"),
+            Content = "New options include Freecam, Lock Furniture, Redo, working Undo with friends, furniture copy/paste, avatar spawn placement, teleport portals, toggleable furniture collisions, and house exterior colour reset."
+        }, "buildingFeatures")
+        local otherBox = eventTab:CreateGroupbox({ Name = "Other changes", Icon = I("list-checks"), Column = col(2) }, "otherUpdate")
+        otherBox:CreateParagraph({
+            Name = "More quality-of-life changes",
+            Icon = I("check"),
+            Content = "You can now post and search for trades outside the Trading Hub, and skip the Neon creation animation. These are game features, not automated farming tasks."
+        }, "otherFeatures")
+        -- Keep Pet Pen automation available; it is not tied to the expired Halloween event.
+        local penBox = eventTab:CreateGroupbox({ Name = "Pet Pen", Icon = I("fence"), Column = 1 }, "pen")
         bindToggle(penBox, "pen", "fence", "Auto Pet Pen", { "Farm", "Event", "PetPen" },
             "At home: claims the pen, takes full grown pets out, puts growing ones in ('Buy eggs' keeps it full)")
         bindToggle(penBox, "penRarest", "gem", "Rarest pets in the pen", { "Farm", "Event", "PetPenRarest" })
@@ -10819,9 +10831,12 @@ __moduleSources["Services/Interface"] = function(...)
             end, function(value)
                 return (type(value) == "string" and value ~= "") and "******** (set)" or ""
             end)
-        local eventInfoBox = eventTab:CreateGroupbox({ Name = "Event status", Icon = I("game:candy"), Column = col(2) }, "eventInfo")
-        local eventInfo = eventInfoBox:CreateParagraph({ Name = "Your event", Icon = I("ghost"), Content = "Waiting for your data..." },
-            "eventText")
+        local eventInfoBox = eventTab:CreateGroupbox({ Name = "Event status", Icon = I("calendar-check"), Column = col(2) }, "eventInfo")
+        local eventInfo = eventInfoBox:CreateParagraph({
+            Name = "Current status",
+            Icon = I("info"),
+            Content = "No Halloween event is active. The latest listed game changes are quality-of-life improvements; this script does not automate the new profile, paint, or building features."
+        }, "eventText")
         -- v3.0.75 Transfer Thingy: YOUR accounts, through the game's mannequin outfit sales and Cash Register (never a
         -- trade). Each switch works on this account only; the Main is only the player the Bucks go to.
         local transferTab = track(farmSection:CreateTab({ Name = "Transfer Thingy", Icon = I("wallet"), Columns = columns }, "transfer"))
@@ -11415,7 +11430,7 @@ __moduleSources["Services/Interface"] = function(...)
         local devCard = developerBox:CreateParagraph({
             Name = dev.name .. "  •  " .. dev.user,
             Icon = I("heart"),
-            Content = "Made Adopt Victims: plain, readable Luau.\nThank you for using it!",
+            Content = "Made Midnight Hub: plain, readable Luau.\nThank you for using it!",
         }, "devCard")
         task.spawn(function()
             local image = Interface.developerAvatar()
@@ -11706,7 +11721,7 @@ __moduleSources["Services/Interface"] = function(...)
                     end
                 end
             end
-            setText(eventInfo, "event", { Content = eventText(status) })
+            -- Event panel now shows current update notes instead of expired Halloween status.
             do -- v3.0.75: Box Lure / Stray Cat Dragon / Transfer Thingy lines and the live dropdowns
                 local s = type(status) == "table" and status or {}
                 local house = type(s.house) == "table" and s.house or {}
@@ -27515,7 +27530,7 @@ __moduleSources["Game/TaskManager"] = function(...)
             end
             task.wait(8)
             pcall(function()
-                game:GetService("Players").LocalPlayer:Kick("Adopt Victims: stuck in an unloaded place (void). Rejoining"
+                game:GetService("Players").LocalPlayer:Kick("Midnight Hub: stuck in an unloaded place (void). Rejoining"
                     .. " gives a fresh game.")
             end)
         end)
@@ -27868,7 +27883,7 @@ __moduleSources["main"] = function(...)
             pcall(function()
                 executor = type(identifyexecutor) == "function" and tostring((identifyexecutor())) or "?"
             end)
-            return string.format("Adopt Victims %s | executor %s | %s", Disclosure.VERSION, executor, os.date("!%Y-%m-%d %H:%M UTC"))
+            return string.format("Midnight Hub %s | executor %s | %s", Disclosure.VERSION, executor, os.date("!%Y-%m-%d %H:%M UTC"))
         end
         for _, warning in ipairs(configWarnings) do
             logger:warn("Config", warning)
@@ -29021,7 +29036,7 @@ __moduleSources["main"] = function(...)
                     else
                         text = "starting"
                     end
-                    label.Text = Lang.tr("Adopt Victims") .. "  •  " .. Lang.tr(text) .. (step and ("\n" .. Lang.tr(step)) or "")
+                    label.Text = Lang.tr("Midnight Hub") .. "  •  " .. Lang.tr(text) .. (step and ("\n" .. Lang.tr(step)) or "")
                 end)
             end)
             maid:Give(task.spawn(function()
